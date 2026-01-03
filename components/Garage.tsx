@@ -61,11 +61,11 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
 			onClick={onClose}
-			className="fixed inset-0 z-[200] bg-[#0a0a0a] flex items-center justify-center"
+			className="fixed inset-0 z-200 bg-[#0a0a0a] flex items-center justify-center"
 		>
 			<button
 				onClick={onClose}
-				className="fixed top-4 right-4 md:top-8 md:right-8 z-[220] w-10 h-10 md:w-12 md:h-12 rounded-full bg-lfp-green/10 hover:bg-lfp-green/20 flex items-center justify-center transition-all duration-300"
+				className="fixed top-4 right-4 md:top-8 md:right-8 z-220 w-10 h-10 md:w-12 md:h-12 rounded-full bg-lfp-green/10 hover:bg-lfp-green/20 flex items-center justify-center transition-all duration-300"
 			>
 				<svg className="w-5 h-5 md:w-6 md:h-6 text-lfp-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -78,7 +78,7 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 				exit={{ scale: 0.98, opacity: 0 }}
 				transition={{ duration: 0.3 }}
 				onClick={(e) => e.stopPropagation()}
-				className="relative w-full h-full max-w-[1800px] mx-auto flex flex-col md:flex-row"
+				className="relative w-full h-full max-w-450 mx-auto flex flex-col md:flex-row"
 			>
 				<div className="relative w-full md:w-[60%] h-[50vh] md:h-full bg-black group/photo">
 					{car.photos.length > 1 && (
@@ -158,7 +158,7 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 					)}
 				</div>
 
-				<div className="w-full md:w-[40%] h-[50vh] md:h-full p-6 md:p-12 overflow-y-auto bg-gradient-to-b from-[#141414] to-[#0a0a0a]">
+				<div className="w-full md:w-[40%] h-[50vh] md:h-full p-6 md:p-12 overflow-y-auto bg-linear-to-b from-[#141414] to-[#0a0a0a]">
 					<motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="mb-8 md:mb-12">
 						<h2 className="text-4xl md:text-6xl font-display text-white mb-3 md:mb-4 tracking-wider leading-tight">{car.model}</h2>
 						<p className="text-2xl md:text-3xl text-lfp-green font-light">{car.year}</p>
@@ -239,7 +239,7 @@ export default function Garage() {
 									sizes="(max-width: 768px) 100vw, 80vw"
 									className="object-cover group-hover:scale-105 transition-transform duration-700"
 								/>
-								<div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+								<div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
 								<div className="absolute bottom-4 left-4 md:bottom-8 md:left-8">
 									<h3 className="text-2xl md:text-4xl font-display text-white mb-1 md:mb-2">{patternCars[0].model}</h3>
 									<p className="text-base md:text-xl text-lfp-green">{patternCars[0].year}</p>
@@ -267,7 +267,7 @@ export default function Garage() {
 											sizes="(max-width: 768px) 100vw, 40vw"
 											className="object-cover group-hover:scale-105 transition-transform duration-700"
 										/>
-										<div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+										<div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
 										<div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
 											<h3 className="text-xl md:text-3xl font-display text-white mb-1">{patternCars[1].model}</h3>
 											<p className="text-sm md:text-lg text-lfp-green">{patternCars[1].year}</p>
@@ -287,7 +287,7 @@ export default function Garage() {
 											sizes="(max-width: 768px) 100vw, 40vw"
 											className="object-cover group-hover:scale-105 transition-transform duration-700"
 										/>
-										<div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+										<div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
 										<div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
 											<h3 className="text-xl md:text-3xl font-display text-white mb-1">{patternCars[2].model}</h3>
 											<p className="text-sm md:text-lg text-lfp-green">{patternCars[2].year}</p>
@@ -318,7 +318,7 @@ export default function Garage() {
 												sizes="(max-width: 768px) 100vw, 40vw"
 												className="object-cover group-hover:scale-105 transition-transform duration-700"
 											/>
-											<div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+											<div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
 											<div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
 												<h3 className="text-lg md:text-2xl font-display text-white mb-1">{patternCars[3].model}</h3>
 												<p className="text-sm md:text-lg text-lfp-green">{patternCars[3].year}</p>
@@ -338,7 +338,7 @@ export default function Garage() {
 												sizes="(max-width: 768px) 100vw, 40vw"
 												className="object-cover group-hover:scale-105 transition-transform duration-700"
 											/>
-											<div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+											<div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
 											<div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
 												<h3 className="text-lg md:text-2xl font-display text-white mb-1">{patternCars[4].model}</h3>
 												<p className="text-sm md:text-lg text-lfp-green">{patternCars[4].year}</p>
@@ -359,7 +359,7 @@ export default function Garage() {
 											sizes="(max-width: 768px) 100vw, 40vw"
 											className="object-cover group-hover:scale-105 transition-transform duration-700"
 										/>
-										<div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+										<div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
 										<div className="absolute bottom-4 left-4 md:bottom-8 md:left-8">
 											<h3 className="text-xl md:text-3xl font-display text-white mb-1 md:mb-2">{patternCars[5].model}</h3>
 											<p className="text-base md:text-xl text-lfp-green">{patternCars[5].year}</p>

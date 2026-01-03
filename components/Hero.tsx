@@ -91,7 +91,7 @@ export default function Hero() {
 					opacity: showNav ? 1 : 0
 				}}
 				transition={{ duration: 0.6, ease: 'easeOut' }}
-				className="md:hidden fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-md border-b border-white/10 z-[90]"
+				className="md:hidden fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-md border-b border-white/10 z-90"
 				style={{
 					paddingTop: 'max(env(safe-area-inset-top), 0px)',
 				}}
@@ -125,7 +125,7 @@ export default function Hero() {
 			{/* Gradient noir desktop uniquement */}
 			<motion.div
 				style={{ opacity: topGradientOpacity }}
-				className="hidden md:block fixed top-0 left-0 right-0 h-24 md:h-28 bg-gradient-to-b from-black via-black/80 to-transparent z-40 pointer-events-none"
+				className="hidden md:block fixed top-0 left-0 right-0 h-24 md:h-28 bg-linear-to-b from-black via-black/80 to-transparent z-40 pointer-events-none"
 			/>
 
 			<section
@@ -151,8 +151,8 @@ export default function Hero() {
 						priority
 					/>
 
-					<div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-					<div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
+					<div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/50 to-black/70" />
+					<div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-black/40" />
 				</motion.div>
 
 				{/* Titre MOBILE - monte au scroll vers la navbar (PAS motion.div) */}
@@ -161,7 +161,7 @@ export default function Hero() {
 						transform: `translate(-50%, -50%) translateY(${mobileTitlePos.y}px) scale(${mobileTitlePos.scale})`,
 						transition: 'transform 0.1s ease-out',
 					}}
-					className="md:hidden fixed top-1/2 left-1/2 z-[100] text-center px-4"
+					className="md:hidden fixed top-1/2 left-1/2 z-100 text-center px-4"
 				>
 					<div className="flex items-center justify-center gap-2">
 						<motion.div
@@ -243,7 +243,7 @@ export default function Hero() {
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.6, duration: 0.3 }}
-							className="min-w-[100px]"
+							className="min-w-25"
 						>
 							<h1
 								className="text-4xl lg:text-5xl font-display text-white tracking-[0.15em] whitespace-nowrap"
