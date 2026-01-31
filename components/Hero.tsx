@@ -145,7 +145,7 @@ export default function Hero() {
 					{/* Mobile image */}
 					<div className="md:hidden absolute inset-0">
 						<Image
-							src="/images/group/group-4.jpg"
+							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/group/group-4.jpg"
 							alt="La Forêt Performance"
 							fill
 							sizes="100vw"
@@ -158,7 +158,7 @@ export default function Hero() {
 					{/* Desktop/tablet image */}
 					<div className="hidden md:block absolute inset-0">
 						<Image
-							src="/images/group/group-3.jpg"
+							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/group/group-3.jpg"
 							alt="La Forêt Performance"
 							fill
 							sizes="100vw"
