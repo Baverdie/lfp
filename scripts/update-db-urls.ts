@@ -29,7 +29,7 @@ async function updateDatabaseUrls() {
 
   for (const member of members) {
     const newPhoto = convertToBlob(member.photo);
-    if (newPhoto !== member.photo) {
+    if (newPhoto && newPhoto !== member.photo) {
       await prisma.member.update({
         where: { id: member.id },
         data: { photo: newPhoto },
