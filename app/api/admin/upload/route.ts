@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/api-utils';
-import { writeFile, unlink, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
+import { put, del } from '@vercel/blob';
 import crypto from 'crypto';
 
-// POST - Upload une image localement
+// POST - Upload une image vers Vercel Blob
 export async function POST(request: NextRequest) {
   const { error } = await checkAuth();
   if (error) return error;
@@ -46,27 +44,20 @@ export async function POST(request: NextRequest) {
     };
     const targetFolder = folderMap[folder] || 'uploads';
 
-    // Créer le dossier si nécessaire
-    const uploadDir = path.join(process.cwd(), 'public', 'images', targetFolder);
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
+    // Upload vers Vercel Blob
+    const blob = await put(`${targetFolder}/${filename}`, buffer, {
+      access: 'public',
+      contentType: `image/${extension}`,
+    });
 
-    // Écrire le fichier
-    const filePath = path.join(uploadDir, filename);
-    await writeFile(filePath, buffer);
-
-    // Retourner l'URL relative
-    const url = `/images/${targetFolder}/${filename}`;
-
-    return NextResponse.json({ url });
+    return NextResponse.json({ url: blob.url });
   } catch (err) {
     console.error('Upload error:', err);
     return NextResponse.json({ error: 'Erreur lors de l\'upload' }, { status: 500 });
   }
 }
 
-// DELETE - Supprimer une image locale
+// DELETE - Supprimer une image de Vercel Blob
 export async function DELETE(request: NextRequest) {
   const { error } = await checkAuth();
   if (error) return error;
@@ -79,17 +70,9 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'URL de l\'image requise' }, { status: 400 });
     }
 
-    // Sécurité : s'assurer que le chemin est bien dans /images/
-    if (!imageUrl.startsWith('/images/')) {
-      return NextResponse.json({ error: 'Chemin invalide' }, { status: 400 });
-    }
-
-    // Construire le chemin absolu
-    const filePath = path.join(process.cwd(), 'public', imageUrl);
-
-    // Vérifier que le fichier existe et le supprimer
-    if (existsSync(filePath)) {
-      await unlink(filePath);
+    // Vérifier que c'est une URL Vercel Blob
+    if (imageUrl.includes('.blob.vercel-storage.com') || imageUrl.includes('.public.blob.vercel-storage.com')) {
+      await del(imageUrl);
     }
 
     return NextResponse.json({ success: true });
