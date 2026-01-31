@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTH MODELS (NextAuth)
+// ============================================
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================
+// USER & PERMISSIONS
+// ============================================
+
+model User {
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
+  email                String    @unique
+  emailVerified        DateTime?
+  image                String?
+  password             String?   // Hashé avec bcrypt, null jusqu'à ce que l'user le définisse
+  role                 Role      @relation(fields: [roleId], references: [id])
+  roleId               String    @db.ObjectId
+  member               Member?   @relation(fields: [memberId], references: [id])
+  memberId             String?   @db.ObjectId // Lien optionnel vers un membre du crew
+  isActive             Boolean   @default(true)
+  lastLogin            DateTime?
+  passwordSetupToken   String?   @unique // Token pour définir/reset le mot de passe
+  passwordSetupExpires DateTime? // Expiration du token
+  accounts             Account[]
+  sessions             Session[]
+  logs                 Log[]
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model Role {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique // "super_admin", "admin", "editor", "viewer"
+  description String?
+  permissions String[] // Stocké directement comme array de strings
+  // Permissions disponibles:
+  // MEMBERS_VIEW, MEMBERS_CREATE, MEMBERS_EDIT, MEMBERS_DELETE
+  // CARS_VIEW, CARS_CREATE, CARS_EDIT, CARS_DELETE
+  // EVENTS_VIEW, EVENTS_CREATE, EVENTS_EDIT, EVENTS_DELETE
+  // PHOTOS_UPLOAD, PHOTOS_DELETE
+  // USERS_VIEW, USERS_CREATE, USERS_EDIT, USERS_DELETE
+  // LOGS_VIEW
+  // SETTINGS_EDIT
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Log {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  action    String   // "CREATE", "UPDATE", "DELETE", "LOGIN", "LOGOUT"
+  entity    String   // "MEMBER", "CAR", "EVENT", "USER"
+  entityId  String?  @db.ObjectId
+  details   String?  // JSON string avec les détails
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// LFP MODELS
+// ============================================
+
+model Member {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  instagram String
+  photo     String
+  bio       String
+  cars      Car[]
+  users     User[]   // Utilisateurs admin liés à ce membre
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Car {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  model         String
+  year          String
+  photos        String[]
+  containPhotos Int[]    @default([])
+  engine        String
+  power         String
+  modifications String
+  story         String
+  memberId      String   @db.ObjectId
+  member        Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Event {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  date        DateTime
+  location    String
+  description String
+  photo       String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // Note: le statut (past/upcoming) est calculé dynamiquement basé sur la date
+}

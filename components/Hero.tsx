@@ -100,7 +100,7 @@ export default function Hero() {
 					{/* Logo E30 */}
 					<div className="w-10 h-10 rounded-full bg-lfp-green/10 border border-lfp-green/30 flex items-center justify-center">
 						<Image
-							src="/images/logo-lfp.jpg"
+							src="/images/logo/LFP.pdf"
 							alt="LFP"
 							width={36}
 							height={36}
@@ -142,17 +142,32 @@ export default function Hero() {
 					transition={{ duration: 2, ease: 'easeOut' }}
 					className="absolute inset-0"
 				>
-					<Image
-						src="/images/hero-bg.jpg"
-						alt="La Forêt Performance"
-						fill
-						sizes="100vw"
-						className="object-cover"
-						priority
-					/>
-
-					<div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/50 to-black/70" />
-					<div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-black/40" />
+					{/* Mobile image */}
+					<div className="md:hidden absolute inset-0">
+						<Image
+							src="/images/group/group-4.jpg"
+							alt="La Forêt Performance"
+							fill
+							sizes="100vw"
+							className="object-cover"
+							priority
+						/>
+						<div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/50 to-black/70" />
+						<div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-black/40" />
+					</div>
+					{/* Desktop/tablet image */}
+					<div className="hidden md:block absolute inset-0">
+						<Image
+							src="/images/group/group-3.jpg"
+							alt="La Forêt Performance"
+							fill
+							sizes="100vw"
+							className="object-cover"
+							priority
+						/>
+						<div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/50 to-black/70" />
+						<div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-black/40" />
+					</div>
 				</motion.div>
 
 				{/* Titre MOBILE - monte au scroll vers la navbar (PAS motion.div) */}
@@ -184,7 +199,7 @@ export default function Hero() {
 							transition={{ delay: 0.6, duration: 0.3 }}
 						>
 							<h1
-								className="text-4xl font-display text-white tracking-[0.2em] whitespace-nowrap"
+								className="text-4xl font-landasans font-display text-white tracking-[0.2em] whitespace-nowrap"
 								style={{ textShadow: '0 2px 20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 0, 0, 0.5)' }}
 							>
 								{displayText === fullText ? mobileText : displayText.slice(0, 3)}
@@ -246,7 +261,7 @@ export default function Hero() {
 							className="min-w-25"
 						>
 							<h1
-								className="text-4xl lg:text-5xl font-display text-white tracking-[0.15em] whitespace-nowrap"
+								className="text-5xl font-landasans lg:text-7xl text-white tracking-[0.15em] whitespace-nowrap"
 								style={{ textShadow: '0 2px 20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 0, 0, 0.5)' }}
 							>
 								{displayText}

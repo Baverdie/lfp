@@ -14,8 +14,9 @@ module.exports = {
 				'lfp-gray': '#1a1a1a',
 			},
 			fontFamily: {
-				'display': ['Bebas Neue', 'sans-serif'],
-				'body': ['Inter', 'sans-serif'],
+				'display': ['Landasans', 'sans-serif'],
+				'body': ['Landasans', 'sans-serif'],
+				'landasans': ['Landasans', 'sans-serif'],
 			},
 		},
 	},

@@ -1,30 +1,24 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, easeInOut } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { crewData } from '@/data/crew';
-
-// Extraire toutes les voitures de tous les membres
-const cars = crewData.flatMap(member =>
-	member.cars.map(car => ({
-		id: `${member.id}-${car.model}`,
-		model: car.model,
-		year: car.year,
-		owner: member.name,
-		ownerInstagram: member.instagram,
-		photos: car.photos,
-		specs: car.specs,
-		story: car.story,
-	}))
-);
+import type { PublicCar } from '@/lib/data';
 
 // Modal Component avec auto-scroll
-function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }) {
+function CarModal({ car, onClose }: { car: PublicCar; onClose: () => void }) {
 	const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 	const [progress, setProgress] = useState(0);
 	const AUTO_SCROLL_DURATION = 10000;
+
+	// Bloquer le scroll du body quand le modal est ouvert
+	useEffect(() => {
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = 'unset';
+		};
+	}, []);
 
 	useEffect(() => {
 		if (car.photos.length <= 1) return;
@@ -65,9 +59,9 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 		>
 			<button
 				onClick={onClose}
-				className="fixed top-4 right-4 md:top-8 md:right-8 z-220 w-10 h-10 md:w-12 md:h-12 rounded-full bg-lfp-green/10 hover:bg-lfp-green/20 flex items-center justify-center transition-all duration-300"
+				className="fixed top-4 right-4 md:top-8 md:right-8 z-220 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-300 cursor-pointer"
 			>
-				<svg className="w-5 h-5 md:w-6 md:h-6 text-lfp-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
 				</svg>
 			</button>
@@ -76,23 +70,23 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 				initial={{ scale: 0.98, opacity: 0 }}
 				animate={{ scale: 1, opacity: 1 }}
 				exit={{ scale: 0.98, opacity: 0 }}
-				transition={{ duration: 0.3 }}
+				transition={{ duration: 0.3, ease: easeInOut }}
 				onClick={(e) => e.stopPropagation()}
 				className="relative w-full h-full max-w-450 mx-auto flex flex-col md:flex-row"
 			>
 				<div className="relative w-full md:w-[60%] h-[50vh] md:h-full bg-black group/photo">
 					{car.photos.length > 1 && (
 						<div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20">
-							<div className="h-full bg-lfp-green bg-white" style={{ width: `${progress}%` }} />
+							<div className="h-full bg-white" style={{ width: `${progress}%` }} />
 						</div>
 					)}
 
 					<motion.a
-						href={car.ownerInstagram}
+						href={`https://instagram.com/${car.ownerInstagram}`}
 						target="_blank"
 						rel="noopener noreferrer"
 						whileHover={{ scale: 1.05 }}
-						className="absolute top-4 left-4 md:top-6 md:left-auto md:right-6 z-30 md:opacity-0 md:group-hover/photo:opacity-100 transition-all duration-300 inline-flex items-center gap-2 md:gap-3 bg-black/80 backdrop-blur-md border border-white/20 hover:border-lfp-green text-white py-2 px-4 md:py-3 md:px-5 rounded-full text-sm"
+						className="absolute top-4 left-4 md:top-6 md:left-auto md:right-6 z-30 md:opacity-0 md:group-hover/photo:opacity-100 transition-all duration-300 inline-flex items-center gap-2 md:gap-3 bg-black/80 backdrop-blur-md border border-white/20 hover:border-white text-white py-2 px-4 md:py-3 md:px-5 rounded-full text-sm"
 						onClick={(e) => e.stopPropagation()}
 					>
 						<svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -108,7 +102,7 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 								exit={{ opacity: 0 }}
-								transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+								transition={{ duration: 0.8, ease: easeInOut }}
 								className="absolute inset-0"
 							>
 								<Image
@@ -116,7 +110,7 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 									alt={`${car.model} - ${currentPhotoIndex + 1}`}
 									fill
 									sizes="(max-width: 768px) 100vw, 60vw"
-									className="object-cover"
+									className={car.containPhotos.includes(currentPhotoIndex) ? "object-contain" : "object-cover"}
 									priority
 								/>
 							</motion.div>
@@ -127,7 +121,7 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 						<>
 							<button
 								onClick={prevPhoto}
-								className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center hover:border-lfp-green hover:bg-lfp-green/10 transition-all duration-300"
+								className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center hover:border-white hover:bg-white/10 transition-all duration-300"
 							>
 								<svg className="w-5 h-5 md:w-7 md:h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -135,7 +129,7 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 							</button>
 							<button
 								onClick={nextPhoto}
-								className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center hover:border-lfp-green hover:bg-lfp-green/10 transition-all duration-300"
+								className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center hover:border-white hover:bg-white/10 transition-all duration-300"
 							>
 								<svg className="w-5 h-5 md:w-7 md:h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -150,7 +144,7 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 								<button
 									key={index}
 									onClick={() => setCurrentPhotoIndex(index)}
-									className={`h-1.5 md:h-2 rounded-full transition-all duration-300 ${index === currentPhotoIndex ? 'bg-lfp-green w-6 md:w-8' : 'bg-white/30 w-1.5 md:w-2 hover:bg-white/50'
+									className={`h-1.5 md:h-2 rounded-full transition-all duration-300 ${index === currentPhotoIndex ? 'bg-white w-6 md:w-8' : 'bg-white/30 w-1.5 md:w-2 hover:bg-white/50'
 										}`}
 								/>
 							))}
@@ -165,7 +159,7 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 					</motion.div>
 
 					<motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="mb-8 md:mb-12">
-						<div className="w-12 h-px bg-lfp-green/30 mb-4 md:mb-6" />
+						<div className="w-12 h-px bg-white/30 mb-4 md:mb-6" />
 						<p className="text-gray-300 text-base md:text-lg leading-relaxed">{car.story}</p>
 					</motion.div>
 
@@ -174,15 +168,15 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 						<div className="space-y-4 md:space-y-6">
 							<div>
 								<span className="text-white/50 text-xs md:text-sm block mb-2">Moteur</span>
-								<span className="text-white text-xl md:text-2xl font-light">{car.specs.engine}</span>
+								<span className="text-white text-xl md:text-2xl font-light">{car.engine}</span>
 							</div>
 							<div>
 								<span className="text-white/50 text-xs md:text-sm block mb-2">Puissance</span>
-								<span className="text-white text-xl md:text-2xl font-light">{car.specs.power}</span>
+								<span className="text-white text-xl md:text-2xl font-light">{car.power}</span>
 							</div>
 							<div>
 								<span className="text-white/50 text-xs md:text-sm block mb-2">Modifications</span>
-								<span className="text-white text-lg md:text-xl font-light">{car.specs.modifications}</span>
+								<span className="text-white text-lg md:text-xl font-light">{car.modifications}</span>
 							</div>
 						</div>
 					</motion.div>
@@ -192,8 +186,12 @@ function CarModal({ car, onClose }: { car: typeof cars[0]; onClose: () => void }
 	);
 }
 
-export default function Garage() {
-	const [selectedCar, setSelectedCar] = useState<typeof cars[0] | null>(null);
+interface GarageProps {
+	cars: PublicCar[];
+}
+
+export default function Garage({ cars }: GarageProps) {
+	const [selectedCar, setSelectedCar] = useState<PublicCar | null>(null);
 	const [ref, inView] = useInView({
 		triggerOnce: true,
 		threshold: 0.1,
@@ -214,11 +212,11 @@ export default function Garage() {
 				className="mb-12 md:mb-20 text-center"
 			>
 				<div className="flex items-center justify-center gap-2 md:gap-4 mb-6 md:mb-8">
-					<span className="text-xl md:text-2xl lg:text-3xl text-lfp-green font-light">──</span>
-					<h2 className="text-4xl md:text-5xl lg:text-7xl font-display text-white tracking-[0.2em]">LE GARAGE</h2>
-					<span className="text-xl md:text-2xl lg:text-3xl text-lfp-green font-light">──</span>
+					<span className="text-xl md:text-2xl lg:text-3xl font-light">──</span>
+					<h2 className="text-4xl md:text-5xl lg:text-7xl font-landasans text-white tracking-widest">LE GARAGE</h2>
+					<span className="text-xl md:text-2xl lg:text-3xl font-light">──</span>
 				</div>
-				<p className="text-gray-400 text-base md:text-xl">Les bolides du crew 🏁</p>
+				<p className="text-gray-400 text-base md:text-xl">Les bolides du crew</p>
 			</motion.div>
 
 			<div ref={ref} className="max-w-7xl mx-auto space-y-4 md:space-y-6">
@@ -244,7 +242,7 @@ export default function Garage() {
 									<h3 className="text-2xl md:text-4xl font-display text-white mb-1 md:mb-2">{patternCars[0].model}</h3>
 									<p className="text-base md:text-xl text-lfp-green">{patternCars[0].year}</p>
 								</div>
-								<div className="absolute inset-0 border-2 border-transparent group-hover:border-lfp-green rounded-xl md:rounded-2xl transition-colors duration-500" />
+								<div className="absolute inset-0 border-2 border-transparent group-hover:border-white rounded-xl md:rounded-2xl transition-colors duration-500" />
 							</motion.div>
 						)}
 
@@ -272,7 +270,7 @@ export default function Garage() {
 											<h3 className="text-xl md:text-3xl font-display text-white mb-1">{patternCars[1].model}</h3>
 											<p className="text-sm md:text-lg text-lfp-green">{patternCars[1].year}</p>
 										</div>
-										<div className="absolute inset-0 border-2 border-transparent group-hover:border-lfp-green rounded-xl md:rounded-2xl transition-colors duration-500" />
+										<div className="absolute inset-0 border-2 border-transparent group-hover:border-white rounded-xl md:rounded-2xl transition-colors duration-500" />
 									</div>
 								)}
 								{patternCars[2] && (
@@ -292,7 +290,7 @@ export default function Garage() {
 											<h3 className="text-xl md:text-3xl font-display text-white mb-1">{patternCars[2].model}</h3>
 											<p className="text-sm md:text-lg text-lfp-green">{patternCars[2].year}</p>
 										</div>
-										<div className="absolute inset-0 border-2 border-transparent group-hover:border-lfp-green rounded-xl md:rounded-2xl transition-colors duration-500" />
+										<div className="absolute inset-0 border-2 border-transparent group-hover:border-white rounded-xl md:rounded-2xl transition-colors duration-500" />
 									</div>
 								)}
 							</motion.div>
@@ -323,7 +321,7 @@ export default function Garage() {
 												<h3 className="text-lg md:text-2xl font-display text-white mb-1">{patternCars[3].model}</h3>
 												<p className="text-sm md:text-lg text-lfp-green">{patternCars[3].year}</p>
 											</div>
-											<div className="absolute inset-0 border-2 border-transparent group-hover:border-lfp-green rounded-xl md:rounded-2xl transition-colors duration-500" />
+											<div className="absolute inset-0 border-2 border-transparent group-hover:border-white rounded-xl md:rounded-2xl transition-colors duration-500" />
 										</div>
 									)}
 									{patternCars[4] && (
@@ -343,7 +341,7 @@ export default function Garage() {
 												<h3 className="text-lg md:text-2xl font-display text-white mb-1">{patternCars[4].model}</h3>
 												<p className="text-sm md:text-lg text-lfp-green">{patternCars[4].year}</p>
 											</div>
-											<div className="absolute inset-0 border-2 border-transparent group-hover:border-lfp-green rounded-xl md:rounded-2xl transition-colors duration-500" />
+											<div className="absolute inset-0 border-2 border-transparent group-hover:border-white rounded-xl md:rounded-2xl transition-colors duration-500" />
 										</div>
 									)}
 								</div>
@@ -364,7 +362,7 @@ export default function Garage() {
 											<h3 className="text-xl md:text-3xl font-display text-white mb-1 md:mb-2">{patternCars[5].model}</h3>
 											<p className="text-base md:text-xl text-lfp-green">{patternCars[5].year}</p>
 										</div>
-										<div className="absolute inset-0 border-2 border-transparent group-hover:border-lfp-green rounded-xl md:rounded-2xl transition-colors duration-500" />
+										<div className="absolute inset-0 border-2 border-transparent group-hover:border-white rounded-xl md:rounded-2xl transition-colors duration-500" />
 									</div>
 								)}
 							</motion.div>
