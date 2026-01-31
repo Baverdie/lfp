@@ -53,8 +53,8 @@ function LoginForm() {
       } else {
         // Mettre le flag dans sessionStorage pour afficher le loader
         sessionStorage.setItem('justLoggedIn', 'true');
-        // Rediriger vers le dashboard
-        router.push(callbackUrl);
+        // Rediriger avec rechargement complet pour rafraîchir la session
+        window.location.href = callbackUrl;
       }
     } catch {
       setError('Une erreur est survenue');
