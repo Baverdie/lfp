@@ -36,6 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Large image folders (use Cloudinary instead)
+/public/Dossier site web LFP/
+/public/images/cars/
+/public/images/crew/
+/public/images/group/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
