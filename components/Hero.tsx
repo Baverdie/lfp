@@ -23,12 +23,19 @@ export default function Hero() {
 	// Gradient noir qui apparaît en haut quand le titre monte (desktop uniquement)
 	const topGradientOpacity = useTransform(scrollY, [100, 300], [0, 1]);
 
-	// Gérer le scroll pour mobile
+	// Gérer le scroll pour mobile (throttled pour performance)
 	useEffect(() => {
+		let ticking = false;
 		const handleScroll = () => {
-			setScrollPosition(window.scrollY);
+			if (!ticking) {
+				requestAnimationFrame(() => {
+					setScrollPosition(window.scrollY);
+					ticking = false;
+				});
+				ticking = true;
+			}
 		};
-		window.addEventListener('scroll', handleScroll);
+		window.addEventListener('scroll', handleScroll, { passive: true });
 		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
