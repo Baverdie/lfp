@@ -68,6 +68,13 @@ export default function AdminSidebar() {
 	const { data: session } = useSession();
 	const userPermissions = session?.user?.permissions || [];
 
+	// Debug - à supprimer après
+	console.log('=== DEBUG SESSION ===');
+	console.log('Session user:', session?.user);
+	console.log('Permissions:', userPermissions);
+	console.log('Has LOGS_VIEW:', userPermissions.includes('LOGS_VIEW'));
+	console.log('=====================');
+
 	const filteredNavItems = navItems.filter(
 		(item) => !item.permission || hasPermission(userPermissions, item.permission)
 	);
