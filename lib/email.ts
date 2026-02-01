@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 
 const FROM_EMAIL = process.env.SMTP_FROM || 'LFP Admin <noreply@laforetperformance.fr>';
-const APP_URL = process.env.NEXTAUTH_URL || 'http://localhost:3002';
+const APP_URL = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3002');
 
 // Créer le transporteur SMTP
 function createTransporter() {
