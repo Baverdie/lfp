@@ -13,8 +13,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin' + pathname, request.url));
   }
 
-  // Protéger les routes /admin (sauf /admin/login)
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
+  // Protéger les routes /admin (sauf /admin/login et /admin/setup-password)
+  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/setup-password')) {
     const token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,
