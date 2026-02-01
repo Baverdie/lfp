@@ -56,7 +56,7 @@ export async function sendPasswordSetupEmail(
                   <!-- Logo -->
                   <tr>
                     <td align="center" style="padding-bottom: 32px;">
-                      <img src="laforetperformance.vercel.app/images/logo-lfp.jpg" alt="LFP" width="80" height="80" style="border-radius: 50%; border: 2px solid #333333; display: block;" />
+                      <img src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg" alt="LFP" width="80" height="80" style="border-radius: 50%; border: 2px solid #333333; display: block;" />
                     </td>
                   </tr>
 
@@ -197,7 +197,7 @@ export async function sendPasswordResetEmail(
                   <!-- Logo -->
                   <tr>
                     <td align="center" style="padding-bottom: 32px;">
-                      <img src="laforetperformance.vercel.app/images/logo-lfp.jpg" alt="LFP" width="80" height="80" style="border-radius: 50%; border: 2px solid #333333; display: block;" />
+                      <img src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg" alt="LFP" width="80" height="80" style="border-radius: 50%; border: 2px solid #333333; display: block;" />
                     </td>
                   </tr>
 

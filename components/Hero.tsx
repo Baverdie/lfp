@@ -100,7 +100,7 @@ export default function Hero() {
 					{/* Logo E30 */}
 					<div className="w-10 h-10 rounded-full bg-lfp-green/10 border border-lfp-green/30 flex items-center justify-center">
 						<Image
-							src="/images/logo/LFP.pdf"
+							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg"
 							alt="LFP"
 							width={36}
 							height={36}

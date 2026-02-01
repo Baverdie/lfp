@@ -22,7 +22,7 @@ export default function Footer() {
 						<div className="flex items-center gap-4 mb-6">
 							<div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-lfp-green">
 								<Image
-									src="/images/logo-lfp.jpg"
+									src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg"
 									alt="LFP"
 									fill
 									sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"

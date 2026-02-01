@@ -78,7 +78,7 @@ export default function AdminSidebar() {
 			<div className="p-6 border-b border-white/10">
 				<Link href="/admin" className="flex items-center gap-3">
 					<Image
-						src="/images/logo-lfp.jpg"
+						src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg"
 						alt="LFP"
 						width={40}
 						height={40}
