@@ -98,7 +98,7 @@ function MobileHeader() {
     <div className="md:hidden fixed top-0 left-0 right-0 bg-[#1a1a1a] border-b border-white/10 p-4 z-50 flex items-center justify-between">
       <div className="flex items-center gap-3">
         <Image
-          src="/images/logo-lfp.jpg"
+          src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg"
           alt="LFP"
           width={32}
           height={32}
