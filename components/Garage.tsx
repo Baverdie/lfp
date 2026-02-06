@@ -176,7 +176,7 @@ function CarModal({ car, onClose }: { car: PublicCar; onClose: () => void }) {
 							</div>
 							<div>
 								<span className="text-white/50 text-xs md:text-sm block mb-2">Modifications</span>
-								<span className="text-white text-lg md:text-xl font-light">{car.modifications}</span>
+								<span className="text-white text-lg md:text-xl font-light whitespace-pre-line">{car.modifications}</span>
 							</div>
 						</div>
 					</motion.div>

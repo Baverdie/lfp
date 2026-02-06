@@ -43,10 +43,6 @@ export const authOptions: NextAuthOptions = {
           data: { lastLogin: new Date() },
         });
 
-        console.log('[AUTH] Login success for:', user.email);
-        console.log('[AUTH] Role:', user.role.name);
-        console.log('[AUTH] Permissions from DB:', user.role.permissions);
-
         return {
           id: user.id,
           email: user.email,
@@ -67,29 +63,23 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        console.log('[JWT] Setting token from user, permissions:', user.permissions);
         token.id = user.id;
         token.role = user.role;
         token.permissions = user.permissions;
         token.memberId = user.memberId;
         token.memberPhoto = user.memberPhoto;
-        // Marquer que l'utilisateur vient de se connecter
         token.justLoggedIn = true;
       }
-      console.log('[JWT] Token permissions:', token.permissions);
       return token;
     },
     async session({ session, token }) {
-      console.log('[SESSION] Token permissions:', token.permissions);
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
         session.user.permissions = token.permissions as string[];
         session.user.memberId = token.memberId as string | null;
         session.user.memberPhoto = token.memberPhoto as string | null;
-        // Passer le flag de login à la session
         (session as any).justLoggedIn = token.justLoggedIn;
-        console.log('[SESSION] Final session permissions:', session.user.permissions);
       }
       return session;
     },

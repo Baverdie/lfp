@@ -20,7 +20,7 @@ const MONTHS = [
 
 function DatePicker({ value, onChange }: DatePickerProps) {
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i); // -2 ans à +7 ans
+  const years = Array.from({ length: 10 }, (_, i) => currentYear - 2 + i);
 
   const parseDate = (dateStr: string) => {
     if (!dateStr) return { day: '', month: '', year: '' };
@@ -28,42 +28,54 @@ function DatePicker({ value, onChange }: DatePickerProps) {
     return { day: day || '', month: month || '', year: year || '' };
   };
 
-  const { day, month, year } = parseDate(value);
+  const initialParsed = parseDate(value);
+  const [localDay, setLocalDay] = useState(initialParsed.day);
+  const [localMonth, setLocalMonth] = useState(initialParsed.month);
+  const [localYear, setLocalYear] = useState(initialParsed.year);
+
+  // Sync quand la valeur externe change (ex: édition d'un événement)
+  useEffect(() => {
+    const parsed = parseDate(value);
+    setLocalDay(parsed.day);
+    setLocalMonth(parsed.month);
+    setLocalYear(parsed.year);
+  }, [value]);
 
   const getDaysInMonth = (m: string, y: string) => {
     if (!m || !y) return 31;
     return new Date(parseInt(y), parseInt(m), 0).getDate();
   };
 
-  const daysInMonth = getDaysInMonth(month, year);
+  const daysInMonth = getDaysInMonth(localMonth, localYear);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   const handleChange = (field: 'day' | 'month' | 'year', val: string) => {
-    const newDate = { day, month, year };
-    newDate[field] = val;
+    let newDay = localDay;
+    let newMonth = localMonth;
+    let newYear = localYear;
+
+    if (field === 'day') { newDay = val; setLocalDay(val); }
+    if (field === 'month') { newMonth = val; setLocalMonth(val); }
+    if (field === 'year') { newYear = val; setLocalYear(val); }
 
     // Ajuster le jour si nécessaire
-    if (newDate.day && newDate.month && newDate.year) {
-      const maxDays = getDaysInMonth(newDate.month, newDate.year);
-      if (parseInt(newDate.day) > maxDays) {
-        newDate.day = maxDays.toString().padStart(2, '0');
+    if (newDay && newMonth && newYear) {
+      const maxDays = getDaysInMonth(newMonth, newYear);
+      if (parseInt(newDay) > maxDays) {
+        newDay = maxDays.toString().padStart(2, '0');
+        setLocalDay(newDay);
       }
-    }
-
-    if (newDate.day && newDate.month && newDate.year) {
-      onChange(`${newDate.year}-${newDate.month}-${newDate.day}`);
-    } else if (!newDate.day && !newDate.month && !newDate.year) {
-      onChange('');
+      onChange(`${newYear}-${newMonth}-${newDay}`);
     }
   };
 
-  const selectClass = "px-3 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-lfp-green appearance-none cursor-pointer";
+  const selectClass = "px-3 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-lfp-green cursor-pointer";
 
   return (
     <div className="grid grid-cols-3 gap-2">
       <div className="relative">
         <select
-          value={day}
+          value={localDay}
           onChange={(e) => handleChange('day', e.target.value)}
           className={selectClass}
           required
@@ -78,7 +90,7 @@ function DatePicker({ value, onChange }: DatePickerProps) {
       </div>
       <div className="relative">
         <select
-          value={month}
+          value={localMonth}
           onChange={(e) => handleChange('month', e.target.value)}
           className={selectClass}
           required
@@ -93,7 +105,7 @@ function DatePicker({ value, onChange }: DatePickerProps) {
       </div>
       <div className="relative">
         <select
-          value={year}
+          value={localYear}
           onChange={(e) => handleChange('year', e.target.value)}
           className={selectClass}
           required

@@ -321,13 +321,14 @@ function VoituresContent() {
 
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Modifications</label>
-                <input
-                  type="text"
+                <textarea
                   value={formData.modifications}
                   onChange={(e) => setFormData({ ...formData, modifications: e.target.value })}
-                  placeholder="Suspension KW, échappement custom..."
-                  className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-lfp-green"
+                  rows={4}
+                  placeholder={"Suspension KW V3\nÉchappement custom\nAdmission carbone\n..."}
+                  className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-lg text-white focus:outline-none focus:border-lfp-green resize-none"
                 />
+                <p className="text-xs text-gray-500 mt-1">Une modification par ligne</p>
               </div>
 
               <div>
