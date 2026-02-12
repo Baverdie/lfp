@@ -6,7 +6,15 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import type { PublicMember } from '@/lib/data';
 
-function MemberModal({ member, onClose }: { member: PublicMember; onClose: () => void }) {
+function MemberModal({
+	member,
+	onClose,
+	onOpenCar,
+}: {
+	member: PublicMember;
+	onClose: () => void;
+	onOpenCar?: (carId: string) => void;
+}) {
 	useEffect(() => {
 		document.body.style.overflow = 'hidden';
 		return () => {
@@ -50,6 +58,15 @@ function MemberModal({ member, onClose }: { member: PublicMember; onClose: () =>
 							transition={{ delay: 0.1 }}
 							className="mb-8 md:mb-12 text-center"
 						>
+							<div className="mx-auto mb-4 md:mb-6 w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden border border-white/30 bg-black/40 backdrop-blur-sm">
+								<Image
+									src={member.photo}
+									alt={member.name}
+									fill
+									sizes="112px"
+									className="object-cover"
+								/>
+							</div>
 							<h2 className="text-4xl md:text-6xl font-display text-white mb-3">{member.name}</h2>
 							<p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto mb-6">{member.bio}</p>
 							<a
@@ -86,7 +103,15 @@ function MemberModal({ member, onClose }: { member: PublicMember; onClose: () =>
 										initial={{ opacity: 0, y: 30 }}
 										animate={{ opacity: 1, y: 0 }}
 										transition={{ delay: 0.3 + index * 0.1 }}
-										className="relative bg-linear-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl overflow-hidden border border-white/20 group hover:border-white/50 transition-all duration-500"
+										onClick={(e) => {
+											e.stopPropagation();
+											document.body.style.overflow = 'unset';
+											onClose();
+											window.setTimeout(() => {
+												onOpenCar?.(car.id);
+											}, 120);
+										}}
+										className="relative bg-linear-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl overflow-hidden border border-white/20 group hover:border-white/50 transition-all duration-500 cursor-pointer"
 									>
 										{/* Photo voiture */}
 										<div className="relative h-64 overflow-hidden">
@@ -135,10 +160,23 @@ function isNewMember(createdAt: string): boolean {
 
 interface CrewProps {
 	members: PublicMember[];
+	selectedMember?: PublicMember | null;
+	onSelectMember?: (member: PublicMember) => void;
+	onCloseMember?: () => void;
+	onOpenCar?: (carId: string) => void;
 }
 
-export default function Crew({ members }: CrewProps) {
-	const [selectedMember, setSelectedMember] = useState<PublicMember | null>(null);
+export default function Crew({
+	members,
+	selectedMember: controlledSelectedMember,
+	onSelectMember,
+	onCloseMember,
+	onOpenCar,
+}: CrewProps) {
+	const [internalSelectedMember, setInternalSelectedMember] = useState<PublicMember | null>(null);
+	const selectedMember = controlledSelectedMember ?? internalSelectedMember;
+	const handleSelect = onSelectMember ?? setInternalSelectedMember;
+	const handleClose = onCloseMember ?? (() => setInternalSelectedMember(null));
 	const [ref, inView] = useInView({
 		triggerOnce: true,
 		threshold: 0.1,
@@ -166,10 +204,11 @@ export default function Crew({ members }: CrewProps) {
 				{members.map((member, index) => (
 					<motion.div
 						key={member.id}
+						id={`member-${member.id}`}
 						initial={{ opacity: 0, y: 40 }}
 						animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
 						transition={{ duration: 0.6, delay: index * 0.1 }}
-						onClick={() => setSelectedMember(member)}
+						onClick={() => handleSelect(member)}
 						className="relative aspect-square rounded-xl overflow-hidden cursor-pointer group"
 					>
 						{/* Photo */}
@@ -211,7 +250,9 @@ export default function Crew({ members }: CrewProps) {
 
 			{/* Modal */}
 			<AnimatePresence>
-				{selectedMember && <MemberModal member={selectedMember} onClose={() => setSelectedMember(null)} />}
+				{selectedMember && (
+					<MemberModal member={selectedMember} onClose={handleClose} onOpenCar={onOpenCar} />
+				)}
 			</AnimatePresence>
 		</section>
 	);
