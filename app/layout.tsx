@@ -5,6 +5,10 @@ export const metadata: Metadata = {
 	title: "La Forêt Performance - LFP",
 	description: "Pâturages et belles mécaniques en Charente-Maritime",
 	keywords: ["voiture", "performance", "BMW", "automobile", "youngtimer", "charente-maritime"],
+	icons: {
+		icon: "https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg",
+		apple: "https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg",
+	},
 	openGraph: {
 		title: "La Forêt Performance - LFP",
 		description: "Pâturages et belles mécaniques en Charente-Maritime",
