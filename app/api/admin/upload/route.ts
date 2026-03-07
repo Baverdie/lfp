@@ -35,14 +35,16 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now();
     const filename = `${timestamp}-${uniqueId}.${extension === 'jpeg' ? 'jpg' : extension}`;
 
-    // Mapper les dossiers
+    // Mapper les dossiers vers lfp/
     const folderMap: Record<string, string> = {
-      'lfp/crew': 'crew',
-      'lfp/cars': 'cars',
-      'lfp/events': 'events',
-      'lfp': 'uploads',
+      'lfp/crew': 'lfp/crew',
+      'lfp/cars': 'lfp/cars',
+      'lfp/events': 'lfp/events',
+      'crew': 'lfp/crew',
+      'cars': 'lfp/cars',
+      'events': 'lfp/events',
     };
-    const targetFolder = folderMap[folder] || 'uploads';
+    const targetFolder = folderMap[folder] || 'lfp/uploads';
 
     // Upload vers Vercel Blob
     const blob = await put(`${targetFolder}/${filename}`, buffer, {

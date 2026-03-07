@@ -107,7 +107,7 @@ export default function Hero() {
 					{/* Logo E30 */}
 					<div className="w-10 h-10 rounded-full bg-lfp-green/10 border border-lfp-green/30 flex items-center justify-center">
 						<Image
-							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/logo-lfp.jpg"
+							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/lfp/logo-lfp.jpg"
 							alt="LFP"
 							width={36}
 							height={36}
@@ -152,7 +152,7 @@ export default function Hero() {
 					{/* Mobile image */}
 					<div className="md:hidden absolute inset-0">
 						<Image
-							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/group/group-4.jpg"
+							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/lfp/group/group-4.jpg"
 							alt="La Forêt Performance"
 							fill
 							sizes="100vw"
@@ -165,7 +165,7 @@ export default function Hero() {
 					{/* Desktop/tablet image */}
 					<div className="hidden md:block absolute inset-0">
 						<Image
-							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/group/group-3.jpg"
+							src="https://oh7qghmltywp4luq.public.blob.vercel-storage.com/lfp/group/group-3.jpg"
 							alt="La Forêt Performance"
 							fill
 							sizes="100vw"
